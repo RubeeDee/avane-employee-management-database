@@ -1,0 +1,69 @@
+-- Table: public.employees
+
+CREATE TABLE IF NOT EXISTS public.employees
+(
+    employee_id character varying(20) NOT NULL,
+    first_name character varying(100) NOT NULL,
+    middle_name character varying(100),
+    last_name character varying(100) NOT NULL,
+    gender character varying(30),
+    date_of_birth date,
+    phone_number character varying(30),
+    marital_status character varying(30),
+    email character varying(255),
+    company_email character varying(255),
+    residential_address text,
+    date_of_joining date NOT NULL,
+    department character varying(100),
+    job_title character varying(150),
+    employment_type character varying(50),
+    employment_status character varying(50) NOT NULL,
+    date_of_exit date,
+    created_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    state character varying(100),
+    gender_id integer,
+    marital_status_id integer,
+    department_id integer,
+    employment_type_id integer,
+    employment_status_id integer,
+    job_title_id integer,
+
+    CONSTRAINT employees_pkey PRIMARY KEY (employee_id),
+
+    CONSTRAINT employees_company_email_unique
+        UNIQUE (company_email),
+
+    CONSTRAINT employees_email_unique
+        UNIQUE (email),
+
+    CONSTRAINT fk_employee_department
+        FOREIGN KEY (department_id)
+        REFERENCES public.departments (department_id),
+
+    CONSTRAINT fk_employee_employment_status
+        FOREIGN KEY (employment_status_id)
+        REFERENCES public.employment_status (employment_status_id),
+
+    CONSTRAINT fk_employee_employment_type
+        FOREIGN KEY (employment_type_id)
+        REFERENCES public.employment_types (employment_type_id),
+
+    CONSTRAINT fk_employee_gender
+        FOREIGN KEY (gender_id)
+        REFERENCES public.genders (gender_id),
+
+    CONSTRAINT fk_employee_job_title
+        FOREIGN KEY (job_title_id)
+        REFERENCES public.job_title (job_title_id),
+
+    CONSTRAINT fk_employee_marital_status
+        FOREIGN KEY (marital_status_id)
+        REFERENCES public.marital_status (marital_status_id),
+
+    CONSTRAINT chk_employee_dates
+        CHECK (date_of_exit IS NULL OR date_of_exit >= date_of_joining),
+
+    CONSTRAINT chk_employee_birth_date
+        CHECK (date_of_birth IS NULL OR date_of_birth < date_of_joining)
+);
